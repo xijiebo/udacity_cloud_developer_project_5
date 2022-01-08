@@ -1,4 +1,4 @@
-# Serverless TODO
+# Serverless LEAVE
 
 To implement this project, you need to implement a simple LEAVE application using AWS Lambda and Serverless framework. 
 # Functionality of the application
