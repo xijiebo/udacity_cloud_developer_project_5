@@ -46,7 +46,7 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
 
   onLeaveCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
-      const leaveDate = this.calculateDueDate()
+      const leaveDate = this.calculateLeaveDate()
       const hours = 8
       const newLeave = await createLeave(this.props.auth.getIdToken(), {
         name: this.state.newLeaveName,
@@ -122,26 +122,49 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
 
   renderCreateLeaveInput() {
     return (
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <Input
-            action={{
-              color: 'teal',
-              labelPosition: 'left',
-              icon: 'add',
-              content: 'New leave',
-              onClick: this.onLeaveCreate
-            }}
-            fluid
-            actionPosition="left"
-            placeholder="To change the world..."
-            onChange={this.handleNameChange}
-          />
-        </Grid.Column>
-        <Grid.Column width={16}>
-          <Divider />
-        </Grid.Column>
-      </Grid.Row>
+      <Grid>
+        <Grid.Row>
+          <Grid.Column width={16}>
+            <Input
+              action={{
+                color: 'teal',
+                labelPosition: 'left',
+                icon: 'add',
+                content: 'New leave',
+                onClick: this.onLeaveCreate
+              }}
+              fluid
+              actionPosition="left"
+              placeholder="Vacation"
+              onChange={this.handleNameChange}
+            />
+          </Grid.Column>
+          <Grid.Column width={16}>
+            <Divider />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={16}>
+            <Input
+              action={{
+                color: 'teal',
+                labelPosition: 'left',
+                icon: 'add',
+                content: 'New leave',
+                onClick: this.onLeaveCreate
+              }}
+              fluid
+              actionPosition="left"
+              placeholder="Vacation"
+              onChange={this.handleNameChange}
+            />
+          </Grid.Column>
+          <Grid.Column width={16}>
+            <Divider />
+          </Grid.Column>
+        </Grid.Row>      
+          
+      </Grid>
     )
   }
 
@@ -214,7 +237,7 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
     )
   }
 
-  calculateDueDate(): string {
+  calculateLeaveDate(): string {
     const date = new Date()
     date.setDate(date.getDate() + 7)
 
