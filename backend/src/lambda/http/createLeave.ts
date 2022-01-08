@@ -13,11 +13,11 @@ export const handler = middy(
     console.log("createLeave event: ", event)
 
     const newLeave: CreateLeaveRequest = JSON.parse(event.body)
-    if(!newLeave.name || !newLeave.dueDate) {
+    if(!newLeave.name || !newLeave.leaveDate || !newLeave.hours) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          error: 'name and dueDate are required.'
+          error: 'name , leaveDate, and hours are required.'
         })
       }     
     }

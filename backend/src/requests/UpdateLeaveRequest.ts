@@ -1,8 +1,10 @@
+import { integer } from "aws-sdk/clients/cloudfront";
+
 /**
  * Fields in a request to update a single LEAVE item.
  */
 export interface UpdateLeaveRequest {
   name: string
-  dueDate: string
-  done: boolean
+  leaveDate: string
+  hours: integer
 }

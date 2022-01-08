@@ -1,4 +1,5 @@
 import * as AWS from 'aws-sdk'
+import { integer } from 'aws-sdk/clients/cloudfront'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { LeaveItem } from '../models/LeaveItem'
 
@@ -66,18 +67,18 @@ export class LeavesAccess {
         }).promise()       
       }
 
-      async updateLeave(userId: string, leaveId: string, name: string, dueDate: string, done: boolean) {
+      async updateLeave(userId: string, leaveId: string, name: string, leaveDate: string, hours: integer) {
         await this.docClient.update({
           TableName: this.leavesTable,
           Key: {
             "userId": userId,
             "leaveId": leaveId
           },
-          UpdateExpression: "set #nm = :name, dueDate=:dueDate, done=:done",
+          UpdateExpression: "set #nm = :name, leaveDate=:leaveDate, hours=:hours",
           ExpressionAttributeValues:{
             ":name": name,
-            ":dueDate":dueDate,
-            ":done":done
+            ":leaveDate":leaveDate,
+            ":hours":hours
           },
           ExpressionAttributeNames:{
             "#nm": "name"

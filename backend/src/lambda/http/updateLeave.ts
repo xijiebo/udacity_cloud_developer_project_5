@@ -15,11 +15,11 @@ export const handler = middy(
 
     const updateLeaveRequest: UpdateLeaveRequest = JSON.parse(event.body)
 
-    if(!updateLeaveRequest.name || !updateLeaveRequest.dueDate) {
+    if(!updateLeaveRequest.name || !updateLeaveRequest.leaveDate || !updateLeaveRequest.hours) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          error: 'name and dueDate are required.'
+          error: 'name, leaveDate, and hours are required.'
         })
       }     
     }

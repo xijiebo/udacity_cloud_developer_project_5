@@ -26,7 +26,6 @@ export async function createLeave(
     userId: userId,
     leaveId: uuid.v4(),
     createdAt: new Date().toISOString(),
-    done: false,
     ...createLeaveRequest
   })
 }
@@ -41,7 +40,7 @@ export async function updateLeave(
     updateLeaveRequest: UpdateLeaveRequest
   ) {
     return await leavesAccess.updateLeave(
-        userId, leaveId, updateLeaveRequest.name, updateLeaveRequest.dueDate,updateLeaveRequest.done
+        userId, leaveId, updateLeaveRequest.name, updateLeaveRequest.leaveDate,updateLeaveRequest.hours
     )
 }
 
