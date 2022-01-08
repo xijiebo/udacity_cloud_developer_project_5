@@ -104,9 +104,7 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
         loadingLeaves: false
       })
     } catch (e) {
-      //alert(`Failed to fetch Leaves: ${e.message}`)
-      //TODO::: 8675309, fix me
-      alert(`Failed to fetch Leaves`)
+      alert(`Failed to fetch Leaves: ${e.message}`)
     }
   }
 

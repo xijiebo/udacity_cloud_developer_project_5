@@ -6,8 +6,8 @@ import { UpdateLeaveRequest } from '../types/UpdateLeaveRequest';
 
 export async function getLeaves(idToken: string): Promise<Leave[]> {
   console.log('Fetching Leaves')
-
-  const response = await Axios.get(`${apiEndpoint}/Leaves`, {
+  console.log('apiEndpoint: ' + `${apiEndpoint}`)
+  const response = await Axios.get(`${apiEndpoint}/leaves`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
