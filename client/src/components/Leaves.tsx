@@ -58,8 +58,8 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
         Leaves: [...this.state.Leaves, newLeave],
         newLeaveName: ''
       })
-    } catch {
-      alert('Leave creation failed')
+    } catch(e) {
+      alert('Leave creation failed ' + e.message)
     }
   }
 
@@ -129,7 +129,7 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
               color: 'teal',
               labelPosition: 'left',
               icon: 'add',
-              content: 'New task',
+              content: 'New leave',
               onClick: this.onLeaveCreate
             }}
             fluid

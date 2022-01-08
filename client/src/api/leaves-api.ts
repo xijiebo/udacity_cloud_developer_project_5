@@ -21,7 +21,7 @@ export async function createLeave(
   idToken: string,
   newLeave: CreateLeaveRequest
 ): Promise<Leave> {
-  const response = await Axios.post(`${apiEndpoint}/Leaves`,  JSON.stringify(newLeave), {
+  const response = await Axios.post(`${apiEndpoint}/leaves`,  JSON.stringify(newLeave), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -32,10 +32,10 @@ export async function createLeave(
 
 export async function patchLeave(
   idToken: string,
-  LeaveId: string,
+  leaveId: string,
   updatedLeave: UpdateLeaveRequest
 ): Promise<void> {
-  await Axios.patch(`${apiEndpoint}/Leaves/${LeaveId}`, JSON.stringify(updatedLeave), {
+  await Axios.patch(`${apiEndpoint}/leaves/${leaveId}`, JSON.stringify(updatedLeave), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -45,9 +45,9 @@ export async function patchLeave(
 
 export async function deleteLeave(
   idToken: string,
-  LeaveId: string
+  leaveId: string
 ): Promise<void> {
-  await Axios.delete(`${apiEndpoint}/Leaves/${LeaveId}`, {
+  await Axios.delete(`${apiEndpoint}lLeaves/$lLeaveId}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -57,9 +57,9 @@ export async function deleteLeave(
 
 export async function getUploadUrl(
   idToken: string,
-  LeaveId: string
+  leaveId: string
 ): Promise<string> {
-  const response = await Axios.post(`${apiEndpoint}/Leaves/${LeaveId}/attachment`, '', {
+  const response = await Axios.post(`${apiEndpoint}/leaves/${leaveId}/attachment`, '', {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
