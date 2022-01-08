@@ -1,0 +1,204 @@
+
+service: serverless-leave-app  
+
+plugins:
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+  - serverless-plugin-tracing
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: '20201221'
+
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+
+  tracing:
+    lambda: true
+    apiGateway: true
+
+  # Use these variables in the functions and resouorces section below. For example, 
+  # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
+  environment:
+    LEAVES_TABLE: Leaves-${self:provider.stage}
+    LEAVES_CREATED_AT_INDEX: CreatedAtIndex
+    LEAVE_ID_INDEX: LeaveIdIndex
+    USER_ID_INDEX: UserIdIndex
+    ATTACHMENT_S3_BUCKET: serverless-p5-leave-images-178415772920-${self:provider.stage}
+    SIGNED_URL_EXPIRATION: 300
+
+  logs:
+    # Enable API Gateway logs
+    restApi: true
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - xray:PutTelemetryRecords
+            - xray:PutTraceSegments
+          Resource: "*"
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:DeleteItem
+        - dynamodb:UpdateItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEAVES_TABLE}
+
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEAVES_TABLE}/index/${self:provider.environment.USER_ID_INDEX}
+
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
+
+functions:
+
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
+
+  # Provide iamRoleStatements property for performing Actions on DynamoDB
+  GetLeaves:
+    handler: src/lambda/http/getLeaves.handler
+    events:
+      - http:
+          method: get
+          path: leaves
+          cors: true
+          authorizer: Auth
+
+  # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
+  # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"
+  # To validate incoming HTTP requests, we have provided the request schemas in function definition below. 
+  CreateLeave:
+    handler: src/lambda/http/createLeave.handler
+    events:
+      - http:
+          method: post
+          path: leaves
+          cors: true
+          authorizer: Auth
+          request:
+            schemas:
+              application/json: ${file(models/create-leave-model.json)}
+
+  # Provide property for setting up CORS, Authorizer, iamRoleStatements, and request schemas
+  UpdateLeave:
+    handler: src/lambda/http/updateLeave.handler
+    events:
+      - http:
+          method: patch
+          path: leaves/{leaveId}
+          cors: true
+          authorizer: Auth
+
+  # Provide property for setting up CORS, Authorizer, iamRoleStatements
+  DeleteLeave:
+    handler: src/lambda/http/deleteLeave.handler
+    events:
+      - http:
+          method: delete
+          path: leaves/{leaveId}
+          cors: true
+          authorizer: Auth
+
+  # Provide property for setting up CORS, Authorizer, iamRoleStatements
+  GenerateUploadUrl:
+    handler: src/lambda/http/generateUploadUrl.handler
+    events:
+      - http:
+          method: post
+          path: leaves/{leaveId}/attachment
+          cors: true
+          authorizer: Auth
+
+resources:
+  Resources:
+    # Add necessary AWS resources. You will need at least the following AWS resources
+    # Feel free to change the names as you like. 
+    GatewayResponseDefault4XX:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+    LeavesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S 
+          - AttributeName: createdAt
+            AttributeType: S                    
+          - AttributeName: leaveId
+            AttributeType: S                                                                  
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: leaveId
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.LEAVES_TABLE}
+        LocalSecondaryIndexes:
+          - IndexName: ${self:provider.environment.USER_ID_INDEX}
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: createdAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    # Do not forget to add the CorsConfiguration propoerty
+    AttachmentsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.ATTACHMENT_S3_BUCKET}
+        CorsConfiguration:
+          CorsRules:
+            -
+              AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+    # For cross referencing the name of the bucket, use "!Ref AttachmentsBucket"
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: 
+          Ref: AttachmentsBucket
+        PolicyDocument:
+          Id: MyPolicy
+          # AWS console, cloudformation: "The policy must contain a valid version string"
+          # remove: "Version" ....
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: "*"
+              Action: 
+              - s3:GetObject
+              Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*     
+
