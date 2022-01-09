@@ -1,6 +1,7 @@
 import dateFormat from 'dateformat'
 import { History } from 'history'
 import update from 'immutability-helper'
+import { addListener } from 'process'
 import * as React from 'react'
 import {
   Button,
@@ -56,14 +57,27 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
     this.props.history.push(`/Leaves/${LeaveId}/edit`)
   }
 
-  onLeaveCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  onCreateLeaveButtonClick = async () => {
     try {
-      // const leaveDate = this.calculateLeaveDate()
-      // const hours = 8
       const newLeave = await createLeave(this.props.auth.getIdToken(), {
         name: this.state.newLeaveName,
         leaveDate: this.state.newLeaveDate,
-        //TODO::: 8675309
+        hours: this.state.newLeaveHours
+      })
+      this.setState({
+        Leaves: [...this.state.Leaves, newLeave],
+        newLeaveName: ''
+      })
+    } catch(e) {
+      alert('Leave creation failed ' + e.message)
+    }
+  }
+
+  onLeaveCreate = async () => {
+    try {
+      const newLeave = await createLeave(this.props.auth.getIdToken(), {
+        name: this.state.newLeaveName,
+        leaveDate: this.state.newLeaveDate,
         hours: this.state.newLeaveHours
       })
       this.setState({
@@ -136,15 +150,18 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
     return (
       <Grid>
         <Grid.Row>
-          <Grid.Column width={8}>
+          <Grid.Column >
+            <Button
+              icon
+              color="green"
+              //onClick={() => this.onLeaveCreate}
+              onClick = {this.onCreateLeaveButtonClick}        
+            >
+            <Icon name="pencil" />
+            </Button>
+          </Grid.Column>
+          <Grid.Column width={4}>
             <Input
-              action={{
-                color: 'teal',
-                labelPosition: 'left',
-                icon: 'add',
-                content: 'New leave',
-                onClick: this.onLeaveCreate
-              }}
               fluid
               actionPosition="left"
               placeholder="Vacation"
