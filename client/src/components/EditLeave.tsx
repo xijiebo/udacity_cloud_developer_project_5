@@ -84,8 +84,18 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
     })
   }
 
+  handleLeaveNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.state.name = event.target.value
+  }
+  handleLeaveDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.state.date = event.target.value
+  }
+  handleLeaveHoursChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.state.hours = Number(event.target.value)
+  }
+
+
   onLeaveUpdate = async () => {
-    alert("222222222222222222222222222222222222222222")
     try {
       const newLeave = await patchLeave(this.props.auth.getIdToken(), this.props.match.params.leaveId, {
         name: this.state.name,
@@ -106,7 +116,6 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
   }
 
   onUpdateLeaveButtonClick = async () => {
-    alert("222222222222222222222222222222222222222222")
     try {
       await patchLeave(this.props.auth.getIdToken(), this.props.match.params.leaveId, {
         name: this.state.name,
@@ -124,7 +133,7 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
     this.state.hours = this.props.match.params.hours
     return (
       <div>
-        <h1>Upload new image</h1>
+        <h1>Update leave</h1>
 
         <Grid>
         <Grid.Row>
@@ -132,7 +141,8 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
             <Input
               fluid
               placeholder="Vacation"
-              value={this.state.name}
+              defaultValue ={this.state.name}
+              onChange={this.handleLeaveNameChange}
             />
           </Grid.Column>
 
@@ -140,14 +150,16 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
             <Input
               fluid
               placeholder="Date"
-              value={this.state.date}
+              defaultValue ={this.state.date}
+              onChange={this.handleLeaveDateChange}
             />
           </Grid.Column>
           <Grid.Column width={4}>
             <Input
               fluid
               placeholder="Hours"
-              value={this.state.hours}
+              defaultValue ={this.state.hours}
+              onChange={this.handleLeaveHoursChange}
             />
           </Grid.Column>
           <Grid.Column>  
@@ -164,10 +176,17 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
         </Grid.Row>          
       </Grid>
 
-        <div></div>
+      <Grid>
+      <Grid.Row>
+      </Grid.Row>   
+      </Grid>
+      
+
+      <Grid>
+       
         <Form onSubmit={this.handleSubmit}>
           <Form.Field>
-            <label>File</label>
+            <label><h1>Upload new image</h1></label>
             <input
               type="file"
               accept="image/*"
@@ -178,6 +197,9 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
 
           {this.renderButton()}
         </Form>
+        </Grid>
+   
+
       </div>
     )
   }
@@ -191,6 +213,7 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
         <Button
           loading={this.state.uploadState !== UploadState.NoUpload}
           type="submit"
+          color="green"
         >
           Upload
         </Button>
