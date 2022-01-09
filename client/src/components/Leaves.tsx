@@ -176,7 +176,6 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
             <Button
               icon
               color="green"
-              //onClick={() => this.onLeaveCreate}
               onClick = {this.onCreateLeaveButtonClick}        
             >
                 Add
