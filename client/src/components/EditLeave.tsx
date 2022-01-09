@@ -102,14 +102,6 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
         leaveDate: this.state.date,
         hours: this.state.hours
       })
-
-      //TODO::: 8675309
-      /*
-      this.setState({
-        Leaves: [...this.state.Leaves, newLeave],
-        newLeaveName: ''
-      })
-      */
     } catch(e) {
       alert('Leave creation failed ' + e.message)
     }

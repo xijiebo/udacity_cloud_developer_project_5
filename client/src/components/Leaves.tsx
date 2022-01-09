@@ -108,14 +108,6 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
         hours: Leave.hours
       })
 
-      //TODO:: 8675309 fix me
-      /*
-      this.setState({
-        Leaves: update(this.state.Leaves, {
-          [pos]: { hours: { $set: !Leave.hours } }
-        })
-      })
-      */
     } catch {
       alert('Leave deletion failed')
     }
@@ -139,7 +131,7 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
         <Header as="h1">Leaves</Header>
 
         {this.renderCreateLeaveInput()}
-
+        <Divider />
         {this.renderLeaves()}
       </div>
     )
