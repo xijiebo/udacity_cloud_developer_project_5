@@ -95,8 +95,8 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
       this.setState({
         Leaves: this.state.Leaves.filter(Leave => Leave.leaveId != leaveId)
       })
-    } catch {
-      alert('Leave deletion failed')
+    } catch(e) {
+      alert(`Leave deletion failed: ${e.message}`)
     }
   }
 
@@ -150,20 +150,9 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
     return (
       <Grid>
         <Grid.Row>
-          <Grid.Column >
-            <Button
-              icon
-              color="green"
-              //onClick={() => this.onLeaveCreate}
-              onClick = {this.onCreateLeaveButtonClick}        
-            >
-            <Icon name="pencil" />
-            </Button>
-          </Grid.Column>
           <Grid.Column width={4}>
             <Input
               fluid
-              actionPosition="left"
               placeholder="Vacation"
               onChange={this.handleLeaveNameChange}
             />
@@ -183,6 +172,18 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
               onChange={this.handleLeaveHoursChange}
             />
           </Grid.Column>
+          <Grid.Column>  
+          </Grid.Column> 
+          <Grid.Column >
+            <Button
+              icon
+              color="green"
+              //onClick={() => this.onLeaveCreate}
+              onClick = {this.onCreateLeaveButtonClick}        
+            >
+                Add
+            </Button>
+          </Grid.Column>         
         </Grid.Row>          
       </Grid>
     )

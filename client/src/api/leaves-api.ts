@@ -47,7 +47,7 @@ export async function deleteLeave(
   idToken: string,
   leaveId: string
 ): Promise<void> {
-  await Axios.delete(`${apiEndpoint}lLeaves/$lLeaveId}`, {
+  await Axios.delete(`${apiEndpoint}/leaves/${leaveId}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
