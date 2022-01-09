@@ -88,7 +88,7 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
     this.state.name = event.target.value
   }
   handleLeaveDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.state.date = event.target.value
+    this.state.date = event.target.value.split('-').join('/')
   }
   handleLeaveHoursChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.state.hours = Number(event.target.value)
@@ -128,8 +128,9 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
   }
 
   render() {
+    
     this.state.name = this.props.match.params.name
-    this.state.date = this.props.match.params.date
+    this.state.date = this.props.match.params.date.split('-').join('/')
     this.state.hours = this.props.match.params.hours
     return (
       <div>
@@ -150,7 +151,7 @@ export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState
             <Input
               fluid
               placeholder="Date"
-              defaultValue ={this.state.date}
+              defaultValue ={this.state.date.split('-').join('/')}
               onChange={this.handleLeaveDateChange}
             />
           </Grid.Column>

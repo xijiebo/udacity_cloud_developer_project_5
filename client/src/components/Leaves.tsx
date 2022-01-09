@@ -3,7 +3,6 @@ import { History } from 'history'
 import * as React from 'react'
 import {
   Button,
-  Checkbox,
   Divider,
   Grid,
   Header,
@@ -52,8 +51,10 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
 
 
   onEditButtonClick = (leaveId: string, name: string, date: string, hours: number) => {
-    this.props.history.push(`/leaves/${leaveId}/${name}/${date}/${hours}/edit`)
+    const dateModified = date.split('/').join('-')
+    this.props.history.push(`/leaves/${leaveId}/${name}/${dateModified}/${hours}/edit`)
   }
+  
 
   onCreateLeaveButtonClick = async () => {
     try {
