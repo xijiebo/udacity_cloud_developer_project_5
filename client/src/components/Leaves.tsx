@@ -220,12 +220,15 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
                   //checked={Leave.hours}
                 />
               </Grid.Column>
-              <Grid.Column width={10} verticalAlign="middle">
+              <Grid.Column width={4} verticalAlign="middle">
                 {Leave.name}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
                 {Leave.leaveDate}
               </Grid.Column>
+              <Grid.Column width={3} floated="right">
+                {Leave.hours}
+              </Grid.Column>             
               <Grid.Column width={1} floated="right">
                 <Button
                   icon
