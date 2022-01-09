@@ -26,6 +26,8 @@ interface LeavesProps {
 interface LeavesState {
   Leaves: Leave[]
   newLeaveName: string
+  newLeaveDate: string
+  newLeaveHours: number
   loadingLeaves: boolean
 }
 
@@ -33,12 +35,22 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
   state: LeavesState = {
     Leaves: [],
     newLeaveName: '',
+    newLeaveDate: '',
+    newLeaveHours: 0,
     loadingLeaves: true
   }
 
-  handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handleLeaveNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ newLeaveName: event.target.value })
   }
+  handleLeaveDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ newLeaveDate: event.target.value })
+  }
+  handleLeaveHoursChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ newLeaveHours: Number(event.target.value) })
+  }
+
+
 
   onEditButtonClick = (LeaveId: string) => {
     this.props.history.push(`/Leaves/${LeaveId}/edit`)
@@ -46,13 +58,13 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
 
   onLeaveCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
-      const leaveDate = this.calculateLeaveDate()
-      const hours = 8
+      // const leaveDate = this.calculateLeaveDate()
+      // const hours = 8
       const newLeave = await createLeave(this.props.auth.getIdToken(), {
         name: this.state.newLeaveName,
-        leaveDate,
+        leaveDate: this.state.newLeaveDate,
         //TODO::: 8675309
-        hours
+        hours: this.state.newLeaveHours
       })
       this.setState({
         Leaves: [...this.state.Leaves, newLeave],
@@ -124,7 +136,7 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
     return (
       <Grid>
         <Grid.Row>
-          <Grid.Column width={16}>
+          <Grid.Column width={8}>
             <Input
               action={{
                 color: 'teal',
@@ -136,34 +148,25 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
               fluid
               actionPosition="left"
               placeholder="Vacation"
-              onChange={this.handleNameChange}
+              onChange={this.handleLeaveNameChange}
             />
           </Grid.Column>
-          <Grid.Column width={16}>
-            <Divider />
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={16}>
+
+          <Grid.Column width={4}>
             <Input
-              action={{
-                color: 'teal',
-                labelPosition: 'left',
-                icon: 'add',
-                content: 'New leave',
-                onClick: this.onLeaveCreate
-              }}
               fluid
-              actionPosition="left"
-              placeholder="Vacation"
-              onChange={this.handleNameChange}
+              placeholder="Date"
+              onChange={this.handleLeaveDateChange}
             />
           </Grid.Column>
-          <Grid.Column width={16}>
-            <Divider />
+          <Grid.Column width={4}>
+            <Input
+              fluid
+              placeholder="Hours"
+              onChange={this.handleLeaveHoursChange}
+            />
           </Grid.Column>
-        </Grid.Row>      
-          
+        </Grid.Row>          
       </Grid>
     )
   }
