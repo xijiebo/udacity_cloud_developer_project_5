@@ -1,7 +1,10 @@
+import { integer } from "aws-sdk/clients/cloudfront";
+
 /**
  * Fields in a request to create a single LEAVE item.
  */
 export interface CreateLeaveRequest {
   name: string
-  dueDate: string
+  leaveDate: string
+  hours: integer
 }

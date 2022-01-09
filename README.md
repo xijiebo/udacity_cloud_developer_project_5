@@ -1,6 +1,6 @@
-# Serverless TODO
+# Serverless LEAVE
 
-To implement this project, you need to implement a simple LEAVE application using AWS Lambda and Serverless framework. 
+Implement a simple LEAVE application using AWS Lambda and Serverless framework. 
 # Functionality of the application
 
 This application will allow creating/removing/updating/fetching LEAVE items. Each LEAVE item can optionally have an attachment image. Each user only has access to LEAVE items that he/she has created.
@@ -11,12 +11,12 @@ The application should store LEAVE items, and each LEAVE item contains the follo
 
 * `leaveId` (string) - a unique id for an item
 * `createdAt` (string) - date and time when an item was created
-* `name` (string) - name of a TODO item (e.g. "Change a light bulb")
-* `leaveDate` (string) - date and time by which an item should be completed
-* `hours` (int) - hours of leave
+* `name` (string) - name of a LEAVE item (e.g. "Vacation, Sick, Short Term Disability, etc")
+* `leaveDate` (string) - date of leave
+* `hours` (int) - hours of this leave
 * `attachmentUrl` (string) (optional) - a URL pointing to an image attached to a LEAVE item
 
-You might also store an id of a user who created a TODO item.
+You might also store an id of a user who created a LEAVE item.
 
 ## Prerequisites
 
@@ -79,10 +79,9 @@ It receives a new LEAVE item to be created in JSON format that looks like this:
 ```json
 {
   "createdAt": "2019-07-27T20:01:45.424Z",
-  "name": "PTO",
+  "name": "Vacation",
   "leaveDate": "2019-07-29T20:01:45.424Z",
-  "hours": 8,
-  "attachmentUrl": "http://example.com/image.png"
+  "hours": 8
 }
 ```
 
@@ -93,10 +92,9 @@ It should return a new LEAVE item that looks like this:
   "item": {
     "leaveId": "123",
     "createdAt": "2019-07-27T20:01:45.424Z",
-    "name": "Buy milk",
+    "name": "Vacation",
     "leaveDate": "2019-07-29T20:01:45.424Z",
-    "hours": 8,
-    "attachmentUrl": "http://example.com/image.png"
+    "hours": 8
   }
 }
 ```
@@ -107,7 +105,7 @@ It receives an object that contains three fields that can be updated in a TODO i
 
 ```json
 {
-  "name": "SickLeave",
+  "name": "Sick",
   "leaveDate": "2019-07-29T20:01:45.424Z",
   "hours": 8
 }
@@ -177,112 +175,3 @@ logger.info('User was authorized', {
 })
 ```
 
-
-# Grading the submission
-
-Once you have finished developing your application, please set `apiId` and Auth0 parameters in the `config.ts` file in the `client` folder. A reviewer would start the React development server to run the frontend that should be configured to interact with your serverless application.
-
-**IMPORTANT**
-
-*Please leave your application running until a submission is reviewed. If implemented correctly it will cost almost nothing when your application is idle.*
-
-# Suggestions
-
-To store TODO items, you might want to use a DynamoDB table with local secondary index(es). A create a local secondary index you need to create a DynamoDB resource like this:
-
-```yml
-
-TodosTable:
-  Type: AWS::DynamoDB::Table
-  Properties:
-    AttributeDefinitions:
-      - AttributeName: partitionKey
-        AttributeType: S
-      - AttributeName: sortKey
-        AttributeType: S
-      - AttributeName: indexKey
-        AttributeType: S
-    KeySchema:
-      - AttributeName: partitionKey
-        KeyType: HASH
-      - AttributeName: sortKey
-        KeyType: RANGE
-    BillingMode: PAY_PER_REQUEST
-    TableName: ${self:provider.environment.TODOS_TABLE}
-    LocalSecondaryIndexes:
-      - IndexName: ${self:provider.environment.INDEX_NAME}
-        KeySchema:
-          - AttributeName: partitionKey
-            KeyType: HASH
-          - AttributeName: indexKey
-            KeyType: RANGE
-        Projection:
-          ProjectionType: ALL # What attributes will be copied to an index
-
-```
-
-To query an index you need to use the `query()` method like:
-
-```ts
-await this.dynamoDBClient
-  .query({
-    TableName: 'table-name',
-    IndexName: 'index-name',
-    KeyConditionExpression: 'paritionKey = :paritionKey',
-    ExpressionAttributeValues: {
-      ':paritionKey': partitionKeyValue
-    }
-  })
-  .promise()
-```
-
-# How to run the application
-
-## Backend
-
-To deploy an application run the following commands:
-
-```
-cd backend
-npm install
-sls deploy -v
-```
-
-## Frontend
-
-To run a client application first edit the `client/src/config.ts` file to set correct parameters. And then run the following commands:
-
-```
-cd client
-npm install
-npm run start
-```
-
-This should start a development server with the React application that will interact with the serverless TODO application.
-
-# Postman collection
-
-An alternative way to test your API, you can use the Postman collection that contains sample requests. You can find a Postman collection in this project. To import this collection, do the following.
-
-Click on the import button:
-
-![Alt text](images/import-collection-1.png?raw=true "Image 1")
-
-
-Click on the "Choose Files":
-
-![Alt text](images/import-collection-2.png?raw=true "Image 2")
-
-
-Select a file to import:
-
-![Alt text](images/import-collection-3.png?raw=true "Image 3")
-
-
-Right click on the imported collection to set variables for the collection:
-
-![Alt text](images/import-collection-4.png?raw=true "Image 4")
-
-Provide variables for the collection (similarly to how this was done in the course):
-
-![Alt text](images/import-collection-5.png?raw=true "Image 5")
