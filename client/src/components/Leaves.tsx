@@ -213,7 +213,7 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
               <Grid.Column width={3} floated="right">
                 {Leave.hours}
               </Grid.Column>             
-              <Grid.Column width={1} floated="right">
+              <Grid.Column width={2} floated="right">
                 <Button
                   icon
                   color="blue"
@@ -221,8 +221,6 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
                 >
                   <Icon name="pencil" />
                 </Button>
-              </Grid.Column>
-              <Grid.Column width={1} floated="right">
                 <Button
                   icon
                   color="red"
@@ -231,6 +229,7 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
                   <Icon name="delete" />
                 </Button>
               </Grid.Column>
+
               {Leave.attachmentUrl && (
                 <Image src={Leave.attachmentUrl} size="small" wrapped />
               )}
