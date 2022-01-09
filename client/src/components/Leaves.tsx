@@ -1,7 +1,5 @@
 import dateFormat from 'dateformat'
 import { History } from 'history'
-import update from 'immutability-helper'
-import { addListener } from 'process'
 import * as React from 'react'
 import {
   Button,
@@ -53,8 +51,8 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
 
 
 
-  onEditButtonClick = (LeaveId: string) => {
-    this.props.history.push(`/Leaves/${LeaveId}/edit`)
+  onEditButtonClick = (leaveId: string, name: string, date: string, hours: number) => {
+    this.props.history.push(`/leaves/${leaveId}/${name}/${date}/${hours}/edit`)
   }
 
   onCreateLeaveButtonClick = async () => {
@@ -214,13 +212,6 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
         {this.state.Leaves.map((Leave, pos) => {
           return (
             <Grid.Row key={Leave.leaveId}>
-              <Grid.Column width={1} verticalAlign="middle">
-                <Checkbox
-                  onChange={() => this.onLeaveCheck(pos)}
-                  //TODO::: 8675039, fix me
-                  //checked={Leave.hours}
-                />
-              </Grid.Column>
               <Grid.Column width={4} verticalAlign="middle">
                 {Leave.name}
               </Grid.Column>
@@ -234,7 +225,7 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
                 <Button
                   icon
                   color="blue"
-                  onClick={() => this.onEditButtonClick(Leave.leaveId)}
+                  onClick={() => this.onEditButtonClick(Leave.leaveId, Leave.name, Leave.leaveDate, Leave.hours)}
                 >
                   <Icon name="pencil" />
                 </Button>

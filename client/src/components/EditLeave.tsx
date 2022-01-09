@@ -1,7 +1,13 @@
 import * as React from 'react'
-import { Form, Button } from 'semantic-ui-react'
 import Auth from '../auth/Auth'
 import { getUploadUrl, uploadFile } from '../api/leaves-api'
+import {
+  Form,
+  Button,
+  Grid,
+  Input,
+} from 'semantic-ui-react'
+import { patchLeave } from '../api/leaves-api'
 
 enum UploadState {
   NoUpload,
@@ -12,7 +18,10 @@ enum UploadState {
 interface EditLeaveProps {
   match: {
     params: {
-      leaveId: string
+      leaveId: string,
+      name: string,
+      date: string,
+      hours: number
     }
   }
   auth: Auth
@@ -21,15 +30,20 @@ interface EditLeaveProps {
 interface EditLeaveState {
   file: any
   uploadState: UploadState
+  name: string
+  date: string
+  hours: number
+
 }
 
-export class EditLeave extends React.PureComponent<
-  EditLeaveProps,
-  EditLeaveState
-> {
+export class EditLeave extends React.PureComponent<EditLeaveProps,EditLeaveState> {
+
   state: EditLeaveState = {
     file: undefined,
-    uploadState: UploadState.NoUpload
+    uploadState: UploadState.NoUpload,
+    name: '',
+    date: '',
+    hours: 0
   }
 
   handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,11 +84,87 @@ export class EditLeave extends React.PureComponent<
     })
   }
 
+  onLeaveUpdate = async () => {
+    alert("222222222222222222222222222222222222222222")
+    try {
+      const newLeave = await patchLeave(this.props.auth.getIdToken(), this.props.match.params.leaveId, {
+        name: this.state.name,
+        leaveDate: this.state.date,
+        hours: this.state.hours
+      })
+
+      //TODO::: 8675309
+      /*
+      this.setState({
+        Leaves: [...this.state.Leaves, newLeave],
+        newLeaveName: ''
+      })
+      */
+    } catch(e) {
+      alert('Leave creation failed ' + e.message)
+    }
+  }
+
+  onUpdateLeaveButtonClick = async () => {
+    alert("222222222222222222222222222222222222222222")
+    try {
+      await patchLeave(this.props.auth.getIdToken(), this.props.match.params.leaveId, {
+        name: this.state.name,
+        leaveDate: this.state.date,
+        hours: this.state.hours
+      })
+    } catch(e) {
+      alert('Leave creation failed ' + e.message)
+    }
+  }
+
   render() {
+    this.state.name = this.props.match.params.name
+    this.state.date = this.props.match.params.date
+    this.state.hours = this.props.match.params.hours
     return (
       <div>
         <h1>Upload new image</h1>
 
+        <Grid>
+        <Grid.Row>
+          <Grid.Column width={4}>
+            <Input
+              fluid
+              placeholder="Vacation"
+              value={this.state.name}
+            />
+          </Grid.Column>
+
+          <Grid.Column width={4}>
+            <Input
+              fluid
+              placeholder="Date"
+              value={this.state.date}
+            />
+          </Grid.Column>
+          <Grid.Column width={4}>
+            <Input
+              fluid
+              placeholder="Hours"
+              value={this.state.hours}
+            />
+          </Grid.Column>
+          <Grid.Column>  
+          </Grid.Column> 
+          <Grid.Column >
+            <Button
+              icon
+              color="green"
+              onClick={this.onUpdateLeaveButtonClick}
+            >
+                Update
+            </Button>
+          </Grid.Column>         
+        </Grid.Row>          
+      </Grid>
+
+        <div></div>
         <Form onSubmit={this.handleSubmit}>
           <Form.Field>
             <label>File</label>

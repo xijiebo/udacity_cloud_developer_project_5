@@ -1,6 +1,6 @@
 export interface Leave {
   leaveId: string
-  createdAt: string
+  createdAt?: string
   name: string
   leaveDate: string
   hours: number
