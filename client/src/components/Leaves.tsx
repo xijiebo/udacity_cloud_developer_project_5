@@ -212,7 +212,12 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
               </Grid.Column>
               <Grid.Column width={3} floated="right">
                 {Leave.hours}
-              </Grid.Column>             
+              </Grid.Column>  
+              <Grid.Column width={3} floated="right"    >               
+                {Leave.attachmentUrl && (
+                  <Image src={Leave.attachmentUrl} size="small" wrapped />
+                )}
+              </Grid.Column>       
               <Grid.Column width={2} floated="right">
                 <Button
                   icon
@@ -230,9 +235,6 @@ export class Leaves extends React.PureComponent<LeavesProps, LeavesState> {
                 </Button>
               </Grid.Column>
 
-              {Leave.attachmentUrl && (
-                <Image src={Leave.attachmentUrl} size="small" wrapped />
-              )}
               <Grid.Column width={16}>
                 <Divider />
               </Grid.Column>

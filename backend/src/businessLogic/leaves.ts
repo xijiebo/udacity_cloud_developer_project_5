@@ -40,7 +40,7 @@ export async function updateLeave(
     updateLeaveRequest: UpdateLeaveRequest
   ) {
     return await leavesAccess.updateLeave(
-        userId, leaveId, updateLeaveRequest.name, updateLeaveRequest.leaveDate,updateLeaveRequest.hours
+        userId, leaveId, updateLeaveRequest.name, updateLeaveRequest.leaveDate,updateLeaveRequest.hours, updateLeaveRequest.attachmentUrl
     )
 }
 
