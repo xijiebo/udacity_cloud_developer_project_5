@@ -7,4 +7,5 @@ export interface UpdateLeaveRequest {
   name: string
   leaveDate: string
   hours: integer
+  attachmentUrl?: string
 }

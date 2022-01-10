@@ -67,18 +67,19 @@ export class LeavesAccess {
         }).promise()       
       }
 
-      async updateLeave(userId: string, leaveId: string, name: string, leaveDate: string, hours: integer) {
+      async updateLeave(userId: string, leaveId: string, name: string, leaveDate: string, hours: integer, attachmentUrl: string) {
         await this.docClient.update({
           TableName: this.leavesTable,
           Key: {
             "userId": userId,
             "leaveId": leaveId
           },
-          UpdateExpression: "set #nm = :name, leaveDate=:leaveDate, hours=:hours",
+          UpdateExpression: "set #nm = :name, leaveDate=:leaveDate, hours=:hours, attachmentUrl=:attachmentUrl ",
           ExpressionAttributeValues:{
             ":name": name,
             ":leaveDate":leaveDate,
-            ":hours":hours
+            ":hours":hours,
+            ":attachmentUrl":attachmentUrl
           },
           ExpressionAttributeNames:{
             "#nm": "name"
