@@ -20,7 +20,7 @@ export const handler = middy(
       name: item.name,
       leaveDate: item.leaveDate,
       hours: item.hours,
-      attachmentUrl: uploadUrl
+      attachmentUrl: `https://serverless-p5-leave-images-178415772920-dev.s3.amazonaws.com/${event.pathParameters.leaveId}`
     }  
     await updateLeave(getUserId(event), event.pathParameters.leaveId, updateLeaveRequest)
 
